@@ -1,11 +1,13 @@
 import sys
-import client
-import util
-import json
 import time
 
+import util.util as util
+import models.song as song
+import service.client as spotipy_client
+import service.util as spotipy_util
+
 scope = "user-read-recently-played"
-list_of_songs = set()
+set_of_songs = set()
 
 
 def main():
@@ -13,7 +15,7 @@ def main():
     validate_command_args()
     username = sys.argv[1]
 
-    token = util.prompt_for_user_token(username, scope)
+    token = spotipy_util.prompt_for_user_token(username, scope)
 
     if token:
         while True:
@@ -21,10 +23,9 @@ def main():
 
 
 def get_recent_songs(token, num_songs):
-    sp = client.Spotify(auth=token)
+    sp = spotipy_client.Spotify(auth=token)
     json_response = sp.current_user_recently_played(limit=num_songs)
     extract_recent_songs(json_response, num_songs)
-
     time.sleep(600)
 
 
@@ -32,17 +33,13 @@ def extract_recent_songs(json_result, num_songs):
 
     items = json_result["items"]
     for i in range(num_songs):
-        song = items[i]
-        track = song["track"]
-        name = track["name"]
-        list_of_songs.add(name)
+        data = items[i]
+        track = data["track"]
+        new_song = song.Song(track["name"], track["artists"][0]["name"], data["played_at"], track["id"])
+        set_of_songs.add(new_song)
 
-        print(list_of_songs)
-
+    util.print_songs(list(set_of_songs))
     print("\n")
-
-def json_to_string(json_result):
-    return json.dumps(json_result, sort_keys=True, indent=4)
 
 
 def validate_command_args():

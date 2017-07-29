@@ -1,7 +1,10 @@
 from __future__ import print_function
+
 import os
-import authentication
 import webbrowser
+
+from service import authentication
+
 
 def prompt_for_user_token(username, scope=None, client_id = None,
         client_secret = None, redirect_uri = None):
@@ -37,7 +40,7 @@ def prompt_for_user_token(username, scope=None, client_id = None,
         ''')
 
     sp_oauth = authentication.SpotifyOAuth(client_id, client_secret, redirect_uri,
-        scope=scope, cache_path=".cache-" + username )
+                                           scope=scope, cache_path=".cache-" + username)
 
     # try to get a valid token for this user, from the cache,
     # if not in the cache, the create a new (this will send

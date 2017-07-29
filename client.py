@@ -666,13 +666,13 @@ class Spotify(object):
         return self._get('me/top/tracks', time_range=time_range, limit=limit,
                          offset=offset)
 
-    def current_user_recently_played(self, limit=50):
+    def current_user_recently_played(self, limit=50, after=None, before=None):
         ''' Get the current user's recently played tracks
 
             Parameters:
                 - limit - the number of entities to return
         '''
-        return self._get('me/player/recently-played', limit=limit)
+        return self._get('me/player/recently-played', limit=limit, after=after, before=before)
 
     def current_user_saved_albums_add(self, albums=[]):
         ''' Add one or more albums to the current user's

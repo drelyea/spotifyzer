@@ -1,12 +1,15 @@
 from __future__ import print_function
+
 import os
-import authentication
 import webbrowser
+
+from custom_spotipy import authentication
+
 
 def prompt_for_user_token(username, scope=None, client_id = None,
         client_secret = None, redirect_uri = None):
     ''' prompts the user to login if necessary and returns
-        the user token suitable for use with the spotipy.Spotify
+        the user token suitable for use with the custom_spotipy.Spotify
         constructor
         Parameters:
          - username - the Spotify username
@@ -37,7 +40,7 @@ def prompt_for_user_token(username, scope=None, client_id = None,
         ''')
 
     sp_oauth = authentication.SpotifyOAuth(client_id, client_secret, redirect_uri,
-        scope=scope, cache_path=".cache-" + username )
+                                           scope=scope, cache_path=".cache-" + username)
 
     # try to get a valid token for this user, from the cache,
     # if not in the cache, the create a new (this will send

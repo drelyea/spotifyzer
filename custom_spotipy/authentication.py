@@ -35,10 +35,10 @@ class SpotifyClientCredentials(object):
         environment variables
         """
         if not client_id:
-            client_id = os.getenv('SPOTIPY_CLIENT_ID')
+            client_id = os.getenv('CLIENT_ID')
 
         if not client_secret:
-            client_secret = os.getenv('SPOTIPY_CLIENT_SECRET')
+            client_secret = os.getenv('CLIENT_SECRET')
 
         if not client_id:
             raise SpotifyOauthError('No client id')

@@ -8,28 +8,39 @@ scope = "user-read-recently-played"
 
 def main():
 
+    # setup
     validate_command_args()
     username = sys.argv[1]
+    filename = sys.argv[2]
 
-    # get authentication token
-    token = spotipy_util.prompt_for_user_token(username, scope)
+    # log
+    print(str.format("Starting Spotifyzer for user {}\nPrinting to file {}\n", username, filename))
 
+    # set default timestamp
     last_unix_timestamp = None
 
-    if token:
-        # continuously query for new songs
-        while True:
-            last_unix_timestamp = service.get_recent_songs(token, 10, last_unix_timestamp)
-            print(str.format("\nLast Timestamp: {}", last_unix_timestamp))
-            time.sleep(1200)
+    # continuously query for new songs
+    while True:
+
+        # get authentication token
+        token = spotipy_util.prompt_for_user_token(username, scope)
+
+        # query
+        last_unix_timestamp = service.get_recent_songs(token, 50, last_unix_timestamp, filename)
+
+        # sleep for 20 minutes
+        # guaranteed to not miss songs with this time
+        # over 25 minutes would allow missing songs if skipped at 30 second mark every time
+        time.sleep(60)
 
 
+# checks command args
 def validate_command_args():
 
     # check number of arguments
-    if len(sys.argv) != 2:
+    if len(sys.argv) != 3:
         print("Error with system arguments. "
-              "Expected use: spotifyzer <username>")
+              "Expected use: spotifyzer <username> <filename>")
         exit(-1)
 
 

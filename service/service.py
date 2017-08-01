@@ -1,40 +1,57 @@
-import time
-
 import util.util as util
 import models.song as song
 import custom_spotipy.client as spotipy_client
 
-set_of_songs = set()
-set_of_ids = set()
+list_of_songs = []
 
 
-def get_recent_songs(token, num_songs, last_timestamp):
+# takes in a spotify token, the number of songs to query, and a timestamp to look after
+# queries spotipy api and calls extract_recent_songs
+def get_recent_songs(token, num_songs, last_timestamp, filename):
+
+    # get client with token
     sp = spotipy_client.Spotify(auth=token)
-    print(str.format("Trying with timestamp: {}", last_timestamp))
+
+    # query spotify
     json_response = sp.current_user_recently_played(limit=num_songs, after=last_timestamp)
-    last_timestamp = extract_recent_songs(json_response, last_timestamp)
+
+    # extract songs and save new query parameter
+    last_timestamp = extract_recent_songs(json_response, last_timestamp, filename)
+
     return last_timestamp
 
 
-def extract_recent_songs(json_result, last_timestamp):
+# takes in a json string result and the last recorded timestamp
+# extracts each song object and saves it
+def extract_recent_songs(json_result, last_timestamp, filename):
 
+    # parse json
     items = json_result["items"]
-
     songs_available = len(items)
 
-    if songs_available == 0:
-        print("\nNo New Songs\n")
-    else:
+    # only do work if new songs
+    if songs_available != 0:
         for i in range(songs_available):
+
+            # parse individual song
             data = items[len(items) - 1 - i]
-            track = data["track"]
-            new_song = song.Song(track["name"], track["artists"][0]["name"], data["played_at"], track["id"])
 
-            last_timestamp = util.timestamp_to_unix(new_song.timestamp)
+            # create new song object
+            new_song = song.Song(data)
 
-            set_of_songs.add(new_song)
-            print(str.format("Got Song: {}\n", new_song.name))
+            # save last_timestamp
+            last_timestamp = new_song.unix_timestamp
 
-    # util.print_songs(set_of_songs)
+            # add song to list
+            list_of_songs.append(new_song)
+
+    # print current set to file
+    util.print_songs_to_file(list_of_songs, filename)
+
+    # log
+    print(str.format("Added {} songs to {}\n", len(list_of_songs), filename))
+
+    # clear list
+    list_of_songs.clear()
 
     return last_timestamp

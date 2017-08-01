@@ -31,10 +31,10 @@ class Spotify(object):
     '''
         Example usage::
 
-            import spotipy
+            import custom_spotipy
 
             urn = 'spotify:artist:3jOstUTkEu2JkjvRdBA5Gu'
-            sp = spotipy.Spotify()
+            sp = custom_spotipy.Spotify()
 
             sp.trace = True # turn on tracing
             sp.trace_out = True # turn on trace out
@@ -671,6 +671,8 @@ class Spotify(object):
 
             Parameters:
                 - limit - the number of entities to return
+                - after - after this unix timestamp
+                - before - before this unix timestamp
         '''
         return self._get('me/player/recently-played', limit=limit, after=after, before=before)
 

@@ -3,13 +3,13 @@ from __future__ import print_function
 import os
 import webbrowser
 
-from service import authentication
+from custom_spotipy import authentication
 
 
 def prompt_for_user_token(username, scope=None, client_id = None,
         client_secret = None, redirect_uri = None):
     ''' prompts the user to login if necessary and returns
-        the user token suitable for use with the spotipy.Spotify
+        the user token suitable for use with the custom_spotipy.Spotify
         constructor
         Parameters:
          - username - the Spotify username

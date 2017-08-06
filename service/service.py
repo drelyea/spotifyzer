@@ -49,7 +49,7 @@ def extract_recent_songs(json_result, last_timestamp, filename):
     util.print_songs_to_file(list_of_songs, filename)
 
     # log
-    print(str.format("Added {} songs to {}\n", len(list_of_songs), filename))
+    print(str.format("Added {} songs to {}", len(list_of_songs), filename))
 
     # clear list
     list_of_songs.clear()

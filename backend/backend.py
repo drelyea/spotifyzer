@@ -32,7 +32,7 @@ def start_recording_loop(username, filename):
         # query
         last_unix_timestamp = service.get_recent_songs(token, 50, last_unix_timestamp, filename)
 
-        # sleep for 1 minute
+        # sleep for 20 minute
         # guaranteed to not miss songs with this time
         # over 25 minutes would allow missing songs if skipped at 30 second mark every time
-        time.sleep(60)
+        time.sleep(1200)

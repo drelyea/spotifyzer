@@ -16,10 +16,11 @@ class Song:
         self.album = track["album"]["name"]
         self.song_id = track["id"]
         self.song_uri = track["uri"]
+        self.explicit = track["explicit"]
 
         self.id = self.song_id + self.local_timestamp.strftime("%H%M%S%d%m%Y")
 
     def __repr__(self):
-        return str.format("{}|{}|{}|{}|{}|{}|{}",
-                          self.id, self.name, self.local_timestamp.strftime("%H:%M:%S %d-%m-%Y"),
-                          self.artist, self.album, self.popularity, self.duration)
+        return str.format("{}|{}|{}|{}|{}|{}|{}|{}",
+                          self.id, self.name, self.artist, self.album, self.popularity,
+                          self.duration, self.explicit, self.local_timestamp.strftime("%H:%M:%S %d-%m-%Y"))

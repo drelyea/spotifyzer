@@ -1,9 +1,6 @@
 import sys
-import time
-import custom_spotipy.util as spotipy_util
-import service.service as service
-
-scope = "user-read-recently-played"
+import backend.backend as backend
+import interaction.interaction as interaction
 
 
 def main():
@@ -16,22 +13,15 @@ def main():
     # log
     print(str.format("Starting Spotifyzer for user {}\nPrinting to file {}\n", username, filename))
 
-    # set default timestamp
-    last_unix_timestamp = None
+    back = backend.BackendThread(1, "Backend-Thread", username, filename)
+    inter = interaction.InteractionThread(1, "Interaction-Thread")
+    back.start()
+    inter.start()
+    back.join()
+    inter.join()
 
-    # continuously query for new songs
-    while True:
-
-        # get authentication token
-        token = spotipy_util.prompt_for_user_token(username, scope)
-
-        # query
-        last_unix_timestamp = service.get_recent_songs(token, 50, last_unix_timestamp, filename)
-
-        # sleep for 20 minute
-        # guaranteed to not miss songs with this time
-        # over 25 minutes would allow missing songs if skipped at 30 second mark every time
-        time.sleep(1200)
+    # close
+    print("Exiting main thread")
 
 
 # checks command args

@@ -1,10 +1,18 @@
-import asyncio
+import threading
 
 
-async def start_interaction():
+class InteractionThread(threading.Thread):
+    def __init__(self, threadID, name):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
 
-    # log
-    print("Starting Interaction Module...")
+    def run(self):
+        print("Starting {}".format(self.name))
+        start_interaction()
 
-    # user_choice = input("Choose an option:\n1:Display All Songs\n")
+
+def start_interaction():
+
+    user_choice = input("Choose an option:\n1:Display All Songs\n")
     print("Do the thing")

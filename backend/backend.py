@@ -1,13 +1,24 @@
 import time
+import threading
 import custom_spotipy.util as spotipy_util
 import service.service as service
 scope = "user-read-recently-played"
 
 
-async def start_recording_loop(username, filename):
+class BackendThread(threading.Thread):
+    def __init__(self, threadID, name, username, filename):
+        threading.Thread.__init__(self)
+        self.threadID = threadID
+        self.name = name
+        self.username = username
+        self.filename = filename
 
-    # log
-    print("Starting Backend Module...")
+    def run(self):
+        print("Starting {}".format(self.name))
+        start_recording_loop(self.username, self.filename)
+
+
+def start_recording_loop(username, filename):
 
     # set default timestamp
     last_unix_timestamp = None

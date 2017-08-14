@@ -1,5 +1,4 @@
 import sys
-import asyncio
 import backend.backend as backend
 import interaction.interaction as interaction
 
@@ -14,10 +13,15 @@ def main():
     # log
     print(str.format("Starting Spotifyzer for user {}\nPrinting to file {}\n", username, filename))
 
-    loop = asyncio.get_event_loop()
-    tasks = [backend.start_recording_loop(username, filename), interaction.start_interaction()]
-    loop.run_until_complete(asyncio.gather(tasks))
-    loop.close()
+    back = backend.BackendThread(1, "Backend-Thread", username, filename)
+    inter = interaction.InteractionThread(1, "Interaction-Thread")
+    back.start()
+    inter.start()
+    back.join()
+    inter.join()
+
+    # close
+    print("Exiting main thread")
 
 
 # checks command args
